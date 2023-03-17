@@ -54,6 +54,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rcc\Classes\GameServer.cs" />
+    <Compile Include="Rcc\Classes\Job.cs" />
+    <Compile Include="Rcc\Classes\LuaType.cs" />
+    <Compile Include="Rcc\Classes\LuaValue.cs" />
+    <Compile Include="Rcc\Classes\RCCService.cs" />
+    <Compile Include="Rcc\Classes\Script.cs" />
+    <Compile Include="SOAP.cs" />
+    <Compile Include="Utility.cs" />
     <EmbeddedResource Include="MainUI.resx">
       <DependentUpon>MainUI.cs</DependentUpon>
     </EmbeddedResource>
