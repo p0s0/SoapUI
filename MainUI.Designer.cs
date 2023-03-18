@@ -517,7 +517,7 @@ namespace SoapUI
             this.createdByLbl.Name = "createdByLbl";
             this.createdByLbl.Size = new System.Drawing.Size(221, 13);
             this.createdByLbl.TabIndex = 9;
-            this.createdByLbl.Text = "Created by pos0#0998. March 17 2023 build.";
+            this.createdByLbl.Text = "Created by pos0#0998. March 18 2023 build.";
             // 
             // repoLink
             // 
