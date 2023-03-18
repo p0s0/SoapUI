@@ -60,10 +60,16 @@ namespace SoapUI
             this.expirationLbl2 = new System.Windows.Forms.Label();
             this.renewJobId = new System.Windows.Forms.TextBox();
             this.jobIdLbl2 = new System.Windows.Forms.Label();
+            this.executePanel = new System.Windows.Forms.Panel();
+            this.executeJobId = new System.Windows.Forms.TextBox();
+            this.jobIdLbl3 = new System.Windows.Forms.Label();
+            this.executeScript = new System.Windows.Forms.RichTextBox();
+            this.scriptLbl2 = new System.Windows.Forms.Label();
             this.settingsPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
             this.openJobPanel.SuspendLayout();
             this.renewJobPanel.SuspendLayout();
+            this.executePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // baseUrlLbl
@@ -180,6 +186,7 @@ namespace SoapUI
             // actionPanel
             // 
             this.actionPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.actionPanel.Controls.Add(this.executePanel);
             this.actionPanel.Controls.Add(this.renewJobPanel);
             this.actionPanel.Controls.Add(this.openJobPanel);
             this.actionPanel.Controls.Add(this.noExtraInfoLbl);
@@ -382,6 +389,53 @@ namespace SoapUI
             this.jobIdLbl2.TabIndex = 0;
             this.jobIdLbl2.Text = "Job ID:";
             // 
+            // executePanel
+            // 
+            this.executePanel.Controls.Add(this.scriptLbl2);
+            this.executePanel.Controls.Add(this.executeScript);
+            this.executePanel.Controls.Add(this.executeJobId);
+            this.executePanel.Controls.Add(this.jobIdLbl3);
+            this.executePanel.Location = new System.Drawing.Point(3, 3);
+            this.executePanel.Name = "executePanel";
+            this.executePanel.Size = new System.Drawing.Size(479, 304);
+            this.executePanel.TabIndex = 12;
+            this.executePanel.Visible = false;
+            // 
+            // executeJobId
+            // 
+            this.executeJobId.Location = new System.Drawing.Point(16, 28);
+            this.executeJobId.Name = "executeJobId";
+            this.executeJobId.Size = new System.Drawing.Size(155, 20);
+            this.executeJobId.TabIndex = 1;
+            this.executeJobId.Text = "Test";
+            // 
+            // jobIdLbl3
+            // 
+            this.jobIdLbl3.AutoSize = true;
+            this.jobIdLbl3.Location = new System.Drawing.Point(13, 12);
+            this.jobIdLbl3.Name = "jobIdLbl3";
+            this.jobIdLbl3.Size = new System.Drawing.Size(41, 13);
+            this.jobIdLbl3.TabIndex = 0;
+            this.jobIdLbl3.Text = "Job ID:";
+            // 
+            // executeScript
+            // 
+            this.executeScript.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.executeScript.Location = new System.Drawing.Point(16, 70);
+            this.executeScript.Name = "executeScript";
+            this.executeScript.Size = new System.Drawing.Size(445, 215);
+            this.executeScript.TabIndex = 2;
+            this.executeScript.Text = "print(\"Hello, world!\")";
+            // 
+            // scriptLbl2
+            // 
+            this.scriptLbl2.AutoSize = true;
+            this.scriptLbl2.Location = new System.Drawing.Point(13, 51);
+            this.scriptLbl2.Name = "scriptLbl2";
+            this.scriptLbl2.Size = new System.Drawing.Size(37, 13);
+            this.scriptLbl2.TabIndex = 3;
+            this.scriptLbl2.Text = "Script:";
+            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -403,6 +457,8 @@ namespace SoapUI
             this.openJobPanel.PerformLayout();
             this.renewJobPanel.ResumeLayout(false);
             this.renewJobPanel.PerformLayout();
+            this.executePanel.ResumeLayout(false);
+            this.executePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -441,6 +497,11 @@ namespace SoapUI
         private System.Windows.Forms.Label expirationLbl2;
         private System.Windows.Forms.TextBox renewJobId;
         private System.Windows.Forms.Label jobIdLbl2;
+        private System.Windows.Forms.Panel executePanel;
+        private System.Windows.Forms.TextBox executeJobId;
+        private System.Windows.Forms.Label jobIdLbl3;
+        private System.Windows.Forms.Label scriptLbl2;
+        private System.Windows.Forms.RichTextBox executeScript;
     }
 }
 

@@ -60,14 +60,20 @@ namespace SoapUI
                         MessageBox.Show("Version: " + response.version + "\r\nEnvrionment count: " + response.environmentCount, "GetStatus Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
+                    case "OpenJobEx": // This doesn't have an actual response, let's just return a generic "Success!"
+                        MessageBox.Show("Success", "OpenJobEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
                     case "RenewLease":
                         response = doc.Descendants().Where(x => x.Name.LocalName == "RenewLeaseResult").FirstOrDefault();
 
                         MessageBox.Show(response.FirstNode.ToString(), "RenewLease Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
-                    case "OpenJobEx": // This doesn't have an actual response, let's just return a generic "Success!"
-                        MessageBox.Show("Success", "OpenJobEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    case "ExecuteEx": // This doesn't have an actual response, let's just return a generic "Success!"
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "ExecuteExResult").FirstOrDefault();
+
+                        MessageBox.Show("Success", "ExecuteEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
                     default:
@@ -105,6 +111,9 @@ namespace SoapUI
                 case "RenewLease":
                     ParseXML(RenewLease(int.Parse(port.Text), renewJobId.Text, Double.Parse(renewExpiration.Text), baseUrl.Text), "RenewLease");
                     break;
+                case "ExecuteEx":
+                    ParseXML(ExecuteEx(int.Parse(port.Text), executeJobId.Text, new GameServer.Rcc.Classes.Script("ExecuteEx", executeScript.Text), baseUrl.Text), "ExecuteEx");
+                    break;
                 default:
                     AddToLog("Invalid SOAPAction " + itemText);
                     MessageBox.Show("Sorry, the SOAPAction " + itemText + " is currently not implemented.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -119,6 +128,7 @@ namespace SoapUI
             noExtraInfoLbl.Visible = false;
             openJobPanel.Visible = false;
             renewJobPanel.Visible = false;
+            executePanel.Visible = false;
 
             switch (soapAction.GetItemText(soapAction.SelectedItem))
             {
@@ -127,6 +137,9 @@ namespace SoapUI
                     break;
                 case "RenewLease":
                     renewJobPanel.Visible = true;
+                    break;
+                case "ExecuteEx":
+                    executePanel.Visible = true;
                     break;
                 default:
                     noExtraInfoLbl.Visible = true;
