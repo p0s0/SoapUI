@@ -65,11 +65,21 @@ namespace SoapUI
             this.jobIdLbl3 = new System.Windows.Forms.Label();
             this.executeScript = new System.Windows.Forms.RichTextBox();
             this.scriptLbl2 = new System.Windows.Forms.Label();
+            this.closeJobPanel = new System.Windows.Forms.Panel();
+            this.closeJobId = new System.Windows.Forms.TextBox();
+            this.jobIdLbl4 = new System.Windows.Forms.Label();
+            this.diagExPanel = new System.Windows.Forms.Panel();
+            this.diagExJobId = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.typeLbl = new System.Windows.Forms.Label();
+            this.diagExType = new System.Windows.Forms.TextBox();
             this.settingsPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
             this.openJobPanel.SuspendLayout();
             this.renewJobPanel.SuspendLayout();
             this.executePanel.SuspendLayout();
+            this.closeJobPanel.SuspendLayout();
+            this.diagExPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // baseUrlLbl
@@ -161,13 +171,11 @@ namespace SoapUI
             "OpenJobEx",
             "RenewLease",
             "ExecuteEx",
-            "Execute",
             "CloseJob",
             "DiagEx",
             "GetAllJobsEx",
             "CloseExpiredJobs",
-            "CloseAllJobs",
-            "BatchJobEx"});
+            "CloseAllJobs"});
             this.soapAction.Location = new System.Drawing.Point(13, 145);
             this.soapAction.Name = "soapAction";
             this.soapAction.Size = new System.Drawing.Size(134, 21);
@@ -186,6 +194,8 @@ namespace SoapUI
             // actionPanel
             // 
             this.actionPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.actionPanel.Controls.Add(this.diagExPanel);
+            this.actionPanel.Controls.Add(this.closeJobPanel);
             this.actionPanel.Controls.Add(this.executePanel);
             this.actionPanel.Controls.Add(this.renewJobPanel);
             this.actionPanel.Controls.Add(this.openJobPanel);
@@ -436,6 +446,78 @@ namespace SoapUI
             this.scriptLbl2.TabIndex = 3;
             this.scriptLbl2.Text = "Script:";
             // 
+            // closeJobPanel
+            // 
+            this.closeJobPanel.Controls.Add(this.closeJobId);
+            this.closeJobPanel.Controls.Add(this.jobIdLbl4);
+            this.closeJobPanel.Location = new System.Drawing.Point(3, 3);
+            this.closeJobPanel.Name = "closeJobPanel";
+            this.closeJobPanel.Size = new System.Drawing.Size(479, 304);
+            this.closeJobPanel.TabIndex = 13;
+            this.closeJobPanel.Visible = false;
+            // 
+            // closeJobId
+            // 
+            this.closeJobId.Location = new System.Drawing.Point(16, 28);
+            this.closeJobId.Name = "closeJobId";
+            this.closeJobId.Size = new System.Drawing.Size(155, 20);
+            this.closeJobId.TabIndex = 1;
+            this.closeJobId.Text = "Test";
+            // 
+            // jobIdLbl4
+            // 
+            this.jobIdLbl4.AutoSize = true;
+            this.jobIdLbl4.Location = new System.Drawing.Point(13, 12);
+            this.jobIdLbl4.Name = "jobIdLbl4";
+            this.jobIdLbl4.Size = new System.Drawing.Size(41, 13);
+            this.jobIdLbl4.TabIndex = 0;
+            this.jobIdLbl4.Text = "Job ID:";
+            // 
+            // diagExPanel
+            // 
+            this.diagExPanel.Controls.Add(this.diagExType);
+            this.diagExPanel.Controls.Add(this.typeLbl);
+            this.diagExPanel.Controls.Add(this.diagExJobId);
+            this.diagExPanel.Controls.Add(this.label1);
+            this.diagExPanel.Location = new System.Drawing.Point(3, 3);
+            this.diagExPanel.Name = "diagExPanel";
+            this.diagExPanel.Size = new System.Drawing.Size(479, 304);
+            this.diagExPanel.TabIndex = 14;
+            this.diagExPanel.Visible = false;
+            // 
+            // diagExJobId
+            // 
+            this.diagExJobId.Location = new System.Drawing.Point(16, 28);
+            this.diagExJobId.Name = "diagExJobId";
+            this.diagExJobId.Size = new System.Drawing.Size(155, 20);
+            this.diagExJobId.TabIndex = 1;
+            this.diagExJobId.Text = "Test";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Job ID:";
+            // 
+            // typeLbl
+            // 
+            this.typeLbl.AutoSize = true;
+            this.typeLbl.Location = new System.Drawing.Point(13, 51);
+            this.typeLbl.Name = "typeLbl";
+            this.typeLbl.Size = new System.Drawing.Size(34, 13);
+            this.typeLbl.TabIndex = 2;
+            this.typeLbl.Text = "Type:";
+            // 
+            // diagExType
+            // 
+            this.diagExType.Location = new System.Drawing.Point(16, 66);
+            this.diagExType.Name = "diagExType";
+            this.diagExType.Size = new System.Drawing.Size(155, 20);
+            this.diagExType.TabIndex = 3;
+            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -459,6 +541,10 @@ namespace SoapUI
             this.renewJobPanel.PerformLayout();
             this.executePanel.ResumeLayout(false);
             this.executePanel.PerformLayout();
+            this.closeJobPanel.ResumeLayout(false);
+            this.closeJobPanel.PerformLayout();
+            this.diagExPanel.ResumeLayout(false);
+            this.diagExPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -502,6 +588,14 @@ namespace SoapUI
         private System.Windows.Forms.Label jobIdLbl3;
         private System.Windows.Forms.Label scriptLbl2;
         private System.Windows.Forms.RichTextBox executeScript;
+        private System.Windows.Forms.Panel closeJobPanel;
+        private System.Windows.Forms.TextBox closeJobId;
+        private System.Windows.Forms.Label jobIdLbl4;
+        private System.Windows.Forms.Panel diagExPanel;
+        private System.Windows.Forms.TextBox diagExType;
+        private System.Windows.Forms.Label typeLbl;
+        private System.Windows.Forms.TextBox diagExJobId;
+        private System.Windows.Forms.Label label1;
     }
 }
 

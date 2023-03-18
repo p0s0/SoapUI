@@ -61,7 +61,7 @@ namespace SoapUI
 
                         break;
                     case "OpenJobEx": // This doesn't have an actual response, let's just return a generic "Success!"
-                        MessageBox.Show("Success", "OpenJobEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Success!", "OpenJobEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
                     case "RenewLease":
@@ -71,13 +71,39 @@ namespace SoapUI
 
                         break;
                     case "ExecuteEx": // This doesn't have an actual response, let's just return a generic "Success!"
-                        response = doc.Descendants().Where(x => x.Name.LocalName == "ExecuteExResult").FirstOrDefault();
+                        MessageBox.Show("Success!", "ExecuteEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        MessageBox.Show("Success", "ExecuteEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break;
+                    case "CloseJob": // This doesn't have an actual response, let's just return a generic "Success!"
+                        MessageBox.Show("Success!", "CloseJob Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
+                    case "DiagEx":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "DiagExResult").FirstOrDefault();
+
+                        MessageBox.Show(response.ToString(), "DiagEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
+                    case "GetAllJobsEx":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "GetAllJobsExResult").FirstOrDefault();
+
+                        MessageBox.Show(response.ToString(), "GetAllJobsEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
+                    case "CloseExpiredJobs":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "CloseExpiredJobsResult").FirstOrDefault();
+
+                        MessageBox.Show("Jobs closed: " + response.FirstNode.ToString(), "CloseExpiredJobs Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
+                    case "CloseAllJobs":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "CloseAllJobsResult").FirstOrDefault();
+
+                        MessageBox.Show("Jobs closed: " + response.FirstNode.ToString(), "CloseAllJobs Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
                     default:
-                        AddToLog("Attempt to call ParseXML(string xml, string soapAction) with invalid arguments");
+                        MessageBox.Show("Attempt to call ParseXML(string xml, string soapAction) with invalid arguments", "ParseXML(string xml, string soapAction) error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                 }
             } catch (XmlException e)
@@ -114,6 +140,21 @@ namespace SoapUI
                 case "ExecuteEx":
                     ParseXML(ExecuteEx(int.Parse(port.Text), executeJobId.Text, new GameServer.Rcc.Classes.Script("ExecuteEx", executeScript.Text), baseUrl.Text), "ExecuteEx");
                     break;
+                case "CloseJob":
+                    ParseXML(CloseJob(int.Parse(port.Text), closeJobId.Text, baseUrl.Text), "CloseJob");
+                    break;
+                case "DiagEx":
+                    ParseXML(DiagEx(int.Parse(port.Text), int.Parse(diagExType.Text), diagExJobId.Text, baseUrl.Text), "DiagEx");
+                    break;
+                case "GetAllJobsEx":
+                    ParseXML(GetAllJobsEx(int.Parse(port.Text), baseUrl.Text), "GetAllJobsEx");
+                    break;
+                case "CloseExpiredJobs":
+                    ParseXML(CloseExpiredJobs(int.Parse(port.Text), baseUrl.Text), "CloseExpiredJobs");
+                    break;
+                case "CloseAllJobs":
+                    ParseXML(CloseAllJobs(int.Parse(port.Text), baseUrl.Text), "CloseAllJobs");
+                    break;
                 default:
                     AddToLog("Invalid SOAPAction " + itemText);
                     MessageBox.Show("Sorry, the SOAPAction " + itemText + " is currently not implemented.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -129,6 +170,8 @@ namespace SoapUI
             openJobPanel.Visible = false;
             renewJobPanel.Visible = false;
             executePanel.Visible = false;
+            closeJobPanel.Visible = false;
+            diagExPanel.Visible = false;
 
             switch (soapAction.GetItemText(soapAction.SelectedItem))
             {
@@ -140,6 +183,12 @@ namespace SoapUI
                     break;
                 case "ExecuteEx":
                     executePanel.Visible = true;
+                    break;
+                case "CloseJob":
+                    closeJobPanel.Visible = true;
+                    break;
+                case "DiagEx":
+                    diagExPanel.Visible = true;
                     break;
                 default:
                     noExtraInfoLbl.Visible = true;
