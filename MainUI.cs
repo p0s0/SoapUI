@@ -160,6 +160,7 @@ namespace SoapUI
                 Enabled = true;
             } catch (Exception err)
             {
+                AddToLog("Error whilst executing SOAPAction: " + err.Message);
                 MessageBox.Show("Error: " + err.Message, "Error whilst executing SOAPAction", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Enabled = true;
             }
@@ -200,6 +201,12 @@ namespace SoapUI
         private void randomizeButton_Click(object sender, EventArgs e)
         {
             openJobId.Text = GameServer.Utility.GenerateGUID();
+        }
+
+        private void repoLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/p0s0/SoapUI");
+            repoLink.LinkVisited = true;
         }
     }
 }
