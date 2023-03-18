@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Xml;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static GameServer.SOAP;
 using System.Xml.Linq;
+using static GameServer.SOAP;
 
 namespace SoapUI
 {
