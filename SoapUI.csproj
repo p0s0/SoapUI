@@ -62,6 +62,7 @@
     <Compile Include="Rcc\Classes\Script.cs" />
     <Compile Include="SOAP.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="XmlResponses\Status.cs" />
     <EmbeddedResource Include="MainUI.resx">
       <DependentUpon>MainUI.cs</DependentUpon>
     </EmbeddedResource>

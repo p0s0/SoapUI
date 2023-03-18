@@ -42,11 +42,19 @@ namespace SoapUI
             this.actionPanel = new System.Windows.Forms.Panel();
             this.noExtraInfoLbl = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.createdByLbl = new System.Windows.Forms.Label();
             this.openJobPanel = new System.Windows.Forms.Panel();
             this.jobIdLbl = new System.Windows.Forms.Label();
             this.openJobId = new System.Windows.Forms.TextBox();
             this.randomizeButton = new System.Windows.Forms.Button();
+            this.expirationLbl = new System.Windows.Forms.Label();
+            this.openJobExpiration = new System.Windows.Forms.TextBox();
+            this.categoryLbl = new System.Windows.Forms.Label();
+            this.openJobCategory = new System.Windows.Forms.ComboBox();
+            this.coresLbl = new System.Windows.Forms.Label();
+            this.openJobCores = new System.Windows.Forms.TextBox();
+            this.scriptLbl = new System.Windows.Forms.Label();
+            this.openJobScript = new System.Windows.Forms.RichTextBox();
             this.settingsPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
             this.openJobPanel.SuspendLayout();
@@ -185,7 +193,7 @@ namespace SoapUI
             // 
             // logBox
             // 
-            this.logBox.BackColor = System.Drawing.SystemColors.Control;
+            this.logBox.BackColor = System.Drawing.SystemColors.Window;
             this.logBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.logBox.Location = new System.Drawing.Point(12, 331);
             this.logBox.Name = "logBox";
@@ -194,17 +202,25 @@ namespace SoapUI
             this.logBox.TabIndex = 8;
             this.logBox.Text = "Log";
             // 
-            // label1
+            // createdByLbl
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 428);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(381, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Created by pos0#0998. March 17 2023 build. https://github.com/p0s0/SoapUI";
+            this.createdByLbl.AutoSize = true;
+            this.createdByLbl.Location = new System.Drawing.Point(9, 428);
+            this.createdByLbl.Name = "createdByLbl";
+            this.createdByLbl.Size = new System.Drawing.Size(381, 13);
+            this.createdByLbl.TabIndex = 9;
+            this.createdByLbl.Text = "Created by pos0#0998. March 17 2023 build. https://github.com/p0s0/SoapUI";
             // 
             // openJobPanel
             // 
+            this.openJobPanel.Controls.Add(this.openJobScript);
+            this.openJobPanel.Controls.Add(this.scriptLbl);
+            this.openJobPanel.Controls.Add(this.openJobCores);
+            this.openJobPanel.Controls.Add(this.coresLbl);
+            this.openJobPanel.Controls.Add(this.openJobCategory);
+            this.openJobPanel.Controls.Add(this.categoryLbl);
+            this.openJobPanel.Controls.Add(this.openJobExpiration);
+            this.openJobPanel.Controls.Add(this.expirationLbl);
             this.openJobPanel.Controls.Add(this.randomizeButton);
             this.openJobPanel.Controls.Add(this.openJobId);
             this.openJobPanel.Controls.Add(this.jobIdLbl);
@@ -229,6 +245,7 @@ namespace SoapUI
             this.openJobId.Name = "openJobId";
             this.openJobId.Size = new System.Drawing.Size(155, 20);
             this.openJobId.TabIndex = 1;
+            this.openJobId.Text = "Test";
             // 
             // randomizeButton
             // 
@@ -240,16 +257,89 @@ namespace SoapUI
             this.randomizeButton.UseVisualStyleBackColor = true;
             this.randomizeButton.Click += new System.EventHandler(this.randomizeButton_Click);
             // 
+            // expirationLbl
+            // 
+            this.expirationLbl.AutoSize = true;
+            this.expirationLbl.Location = new System.Drawing.Point(13, 51);
+            this.expirationLbl.Name = "expirationLbl";
+            this.expirationLbl.Size = new System.Drawing.Size(116, 13);
+            this.expirationLbl.TabIndex = 3;
+            this.expirationLbl.Text = "Expiration (in seconds):";
+            // 
+            // openJobExpiration
+            // 
+            this.openJobExpiration.Location = new System.Drawing.Point(16, 67);
+            this.openJobExpiration.Name = "openJobExpiration";
+            this.openJobExpiration.Size = new System.Drawing.Size(155, 20);
+            this.openJobExpiration.TabIndex = 4;
+            this.openJobExpiration.Text = "600";
+            // 
+            // categoryLbl
+            // 
+            this.categoryLbl.AutoSize = true;
+            this.categoryLbl.Location = new System.Drawing.Point(13, 90);
+            this.categoryLbl.Name = "categoryLbl";
+            this.categoryLbl.Size = new System.Drawing.Size(52, 13);
+            this.categoryLbl.TabIndex = 5;
+            this.categoryLbl.Text = "Category:";
+            // 
+            // openJobCategory
+            // 
+            this.openJobCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.openJobCategory.FormattingEnabled = true;
+            this.openJobCategory.Items.AddRange(new object[] {
+            "0"});
+            this.openJobCategory.Location = new System.Drawing.Point(16, 106);
+            this.openJobCategory.Name = "openJobCategory";
+            this.openJobCategory.Size = new System.Drawing.Size(155, 21);
+            this.openJobCategory.TabIndex = 6;
+            // 
+            // coresLbl
+            // 
+            this.coresLbl.AutoSize = true;
+            this.coresLbl.Location = new System.Drawing.Point(13, 130);
+            this.coresLbl.Name = "coresLbl";
+            this.coresLbl.Size = new System.Drawing.Size(37, 13);
+            this.coresLbl.TabIndex = 7;
+            this.coresLbl.Text = "Cores:";
+            // 
+            // openJobCores
+            // 
+            this.openJobCores.Location = new System.Drawing.Point(16, 146);
+            this.openJobCores.Name = "openJobCores";
+            this.openJobCores.Size = new System.Drawing.Size(155, 20);
+            this.openJobCores.TabIndex = 8;
+            this.openJobCores.Text = "1";
+            // 
+            // scriptLbl
+            // 
+            this.scriptLbl.AutoSize = true;
+            this.scriptLbl.Location = new System.Drawing.Point(13, 169);
+            this.scriptLbl.Name = "scriptLbl";
+            this.scriptLbl.Size = new System.Drawing.Size(37, 13);
+            this.scriptLbl.TabIndex = 9;
+            this.scriptLbl.Text = "Script:";
+            // 
+            // openJobScript
+            // 
+            this.openJobScript.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.openJobScript.Location = new System.Drawing.Point(16, 185);
+            this.openJobScript.Name = "openJobScript";
+            this.openJobScript.Size = new System.Drawing.Size(445, 100);
+            this.openJobScript.TabIndex = 10;
+            this.openJobScript.Text = "print(\"Hello, world!\")";
+            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.createdByLbl);
             this.Controls.Add(this.logBox);
             this.Controls.Add(this.actionPanel);
             this.Controls.Add(this.settingsPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "MainUI";
             this.Text = "SoapUI";
             this.settingsPanel.ResumeLayout(false);
@@ -277,12 +367,20 @@ namespace SoapUI
         private System.Windows.Forms.Panel actionPanel;
         private System.Windows.Forms.Button executeBtn;
         private System.Windows.Forms.Label noExtraInfoLbl;
-        public System.Windows.Forms.RichTextBox logBox;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.RichTextBox logBox;
+        private System.Windows.Forms.Label createdByLbl;
         private System.Windows.Forms.Panel openJobPanel;
         private System.Windows.Forms.Label jobIdLbl;
         private System.Windows.Forms.TextBox openJobId;
         private System.Windows.Forms.Button randomizeButton;
+        private System.Windows.Forms.Label expirationLbl;
+        private System.Windows.Forms.TextBox openJobExpiration;
+        private System.Windows.Forms.ComboBox openJobCategory;
+        private System.Windows.Forms.Label categoryLbl;
+        private System.Windows.Forms.Label coresLbl;
+        private System.Windows.Forms.TextBox openJobCores;
+        private System.Windows.Forms.Label scriptLbl;
+        private System.Windows.Forms.RichTextBox openJobScript;
     }
 }
 
