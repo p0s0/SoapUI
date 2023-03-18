@@ -1,7 +1,6 @@
 ﻿using GameServer.Rcc;
 using GameServer.Rcc.Classes;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
@@ -34,28 +33,6 @@ namespace GameServer
                     return response;
                 } catch (WebException e)
                 {
-                    var response = ((HttpWebResponse)e.Response);
-
-                    try
-                    {
-                        if(response != null)
-                        {
-                            using (var stream = response.GetResponseStream())
-                            {
-                                using (var reader = new StreamReader(stream))
-                                {
-                                    var text = reader.ReadToEnd();
-
-                                    File.WriteAllText(Utility.GetCurrentWorkingDirectory() + "\\Test3.txt", text);
-                                }
-                            }
-                        }
-                    }
-                    catch (WebException ex)
-                    {
-                        // Oh, well, we tried
-                    }
-
                     MessageBox.Show("Error whilst sending " + action + " request to service port " + servicePort.ToString() + ": " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     return "Error";
