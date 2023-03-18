@@ -60,6 +60,16 @@ namespace SoapUI
                         MessageBox.Show("Version: " + response.version + "\r\nEnvrionment count: " + response.environmentCount, "GetStatus Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
+                    case "RenewLease":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "RenewLeaseResult").FirstOrDefault();
+
+                        MessageBox.Show(response.FirstNode.ToString(), "RenewLease Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
+                    case "OpenJobEx": // This doesn't have an actual response, let's just return a generic "Success!"
+                        MessageBox.Show("Success", "OpenJobEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
                     default:
                         AddToLog("Attempt to call ParseXML(string xml, string soapAction) with invalid arguments");
                         break;
@@ -90,7 +100,10 @@ namespace SoapUI
                     ParseXML(GetStatus(int.Parse(port.Text), baseUrl.Text), "GetStatus");
                     break;
                 case "OpenJobEx":
-                    OpenJobEx(int.Parse(port.Text), new GameServer.Rcc.Job(openJobId.Text, Double.Parse(openJobExpiration.Text), openJobCategory.SelectedIndex, Double.Parse(openJobCores.Text)), new GameServer.Rcc.Classes.Script("GameServer", openJobScript.Text), baseUrl.Text);
+                    ParseXML(OpenJobEx(int.Parse(port.Text), new GameServer.Rcc.Job(openJobId.Text, Double.Parse(openJobExpiration.Text), openJobCategory.SelectedIndex, Double.Parse(openJobCores.Text)), new GameServer.Rcc.Classes.Script("GameServer", openJobScript.Text), baseUrl.Text), "OpenJobEx");
+                    break;
+                case "RenewLease":
+                    ParseXML(RenewLease(int.Parse(port.Text), renewJobId.Text, Double.Parse(renewExpiration.Text), baseUrl.Text), "RenewLease");
                     break;
                 default:
                     AddToLog("Invalid SOAPAction " + itemText);
@@ -105,11 +118,15 @@ namespace SoapUI
         {
             noExtraInfoLbl.Visible = false;
             openJobPanel.Visible = false;
+            renewJobPanel.Visible = false;
 
             switch (soapAction.GetItemText(soapAction.SelectedItem))
             {
                 case "OpenJobEx":
                     openJobPanel.Visible = true;
+                    break;
+                case "RenewLease":
+                    renewJobPanel.Visible = true;
                     break;
                 default:
                     noExtraInfoLbl.Visible = true;
