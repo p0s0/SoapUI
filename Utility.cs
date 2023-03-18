@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoapUI;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -21,7 +22,7 @@ namespace GameServer
             }
         }
 
-        public static string GenerateJobID()
+        public static string GenerateGUID()
         {
             return Guid.NewGuid().ToString().ToLower();
         }
