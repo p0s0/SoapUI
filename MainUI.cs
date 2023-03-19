@@ -119,37 +119,37 @@ namespace SoapUI
                 switch (itemText)
                 {
                     case "HelloWorld":
-                        ParseXML(HelloWorld(int.Parse(port.Text), baseUrl.Text), "HelloWorld");
+                        ParseXML(HelloWorld(int.Parse(port.Text), baseUrl.Text, ip.Text), "HelloWorld");
                         break;
                     case "GetVersion":
-                        ParseXML(GetVersion(int.Parse(port.Text), baseUrl.Text), "GetVersion");
+                        ParseXML(GetVersion(int.Parse(port.Text), baseUrl.Text, ip.Text), "GetVersion");
                         break;
                     case "GetStatus":
-                        ParseXML(GetStatus(int.Parse(port.Text), baseUrl.Text), "GetStatus");
+                        ParseXML(GetStatus(int.Parse(port.Text), baseUrl.Text, ip.Text), "GetStatus");
                         break;
                     case "OpenJobEx":
-                        ParseXML(OpenJobEx(int.Parse(port.Text), new GameServer.Rcc.Job(openJobId.Text, Double.Parse(openJobExpiration.Text), openJobCategory.SelectedIndex, Double.Parse(openJobCores.Text)), new GameServer.Rcc.Classes.Script("GameServer", openJobScript.Text), baseUrl.Text), "OpenJobEx");
+                        ParseXML(OpenJobEx(int.Parse(port.Text), new GameServer.Rcc.Job(openJobId.Text, Double.Parse(openJobExpiration.Text), openJobCategory.SelectedIndex, Double.Parse(openJobCores.Text)), new GameServer.Rcc.Classes.Script("GameServer", openJobScript.Text), baseUrl.Text, ip.Text), "OpenJobEx");
                         break;
                     case "RenewLease":
-                        ParseXML(RenewLease(int.Parse(port.Text), renewJobId.Text, Double.Parse(renewExpiration.Text), baseUrl.Text), "RenewLease");
+                        ParseXML(RenewLease(int.Parse(port.Text), renewJobId.Text, Double.Parse(renewExpiration.Text), baseUrl.Text, ip.Text), "RenewLease");
                         break;
                     case "ExecuteEx":
-                        ParseXML(ExecuteEx(int.Parse(port.Text), executeJobId.Text, new GameServer.Rcc.Classes.Script("ExecuteEx", executeScript.Text), baseUrl.Text), "ExecuteEx");
+                        ParseXML(ExecuteEx(int.Parse(port.Text), executeJobId.Text, new GameServer.Rcc.Classes.Script("ExecuteEx", executeScript.Text), baseUrl.Text, ip.Text), "ExecuteEx");
                         break;
                     case "CloseJob":
-                        ParseXML(CloseJob(int.Parse(port.Text), closeJobId.Text, baseUrl.Text), "CloseJob");
+                        ParseXML(CloseJob(int.Parse(port.Text), closeJobId.Text, baseUrl.Text, ip.Text), "CloseJob");
                         break;
                     case "DiagEx":
-                        ParseXML(DiagEx(int.Parse(port.Text), int.Parse(diagExType.Text), diagExJobId.Text, baseUrl.Text), "DiagEx");
+                        ParseXML(DiagEx(int.Parse(port.Text), int.Parse(diagExType.Text), diagExJobId.Text, baseUrl.Text, ip.Text), "DiagEx");
                         break;
                     case "GetAllJobsEx":
-                        ParseXML(GetAllJobsEx(int.Parse(port.Text), baseUrl.Text), "GetAllJobsEx");
+                        ParseXML(GetAllJobsEx(int.Parse(port.Text), baseUrl.Text, ip.Text), "GetAllJobsEx");
                         break;
                     case "CloseExpiredJobs":
-                        ParseXML(CloseExpiredJobs(int.Parse(port.Text), baseUrl.Text), "CloseExpiredJobs");
+                        ParseXML(CloseExpiredJobs(int.Parse(port.Text), baseUrl.Text, ip.Text), "CloseExpiredJobs");
                         break;
                     case "CloseAllJobs":
-                        ParseXML(CloseAllJobs(int.Parse(port.Text), baseUrl.Text), "CloseAllJobs");
+                        ParseXML(CloseAllJobs(int.Parse(port.Text), baseUrl.Text, ip.Text), "CloseAllJobs");
                         break;
                     default:
                         AddToLog("Invalid SOAPAction " + itemText);
