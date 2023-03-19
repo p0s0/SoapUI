@@ -51,7 +51,7 @@ namespace SoapUI
                             environmentCount = (int)x.Element(x.Name.Namespace + "environmentCount")
                         }).FirstOrDefault();
 
-                        MessageBox.Show("Version: " + response.version + "\r\nEnvrionment count: " + response.environmentCount, "GetStatus Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Version: " + response.version + "\r\nEnvironment count: " + response.environmentCount, "GetStatus Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
                     case "OpenJobEx": // This doesn't have an actual response, let's just return a generic "Success!"
