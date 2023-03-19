@@ -29,6 +29,7 @@ namespace SoapUI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainUI));
             this.baseUrlLbl = new System.Windows.Forms.Label();
             this.baseUrl = new System.Windows.Forms.TextBox();
             this.ipLbl = new System.Windows.Forms.Label();
@@ -541,6 +542,7 @@ namespace SoapUI
             this.Controls.Add(this.actionPanel);
             this.Controls.Add(this.settingsPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainUI";
             this.Text = "SoapUI";
