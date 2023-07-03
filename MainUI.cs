@@ -403,6 +403,12 @@ namespace SoapUI
                     case "ExecuteEx":
                         executeScript.Text = file;
                         break;
+                    case "OpenJob":
+                        openJobScript.Text = file;
+                        break;
+                    case "Execute":
+                        executeScript.Text = file;
+                        break;
                     default:
                         MessageBox.Show("Invalid SOAPAction to load script", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
