@@ -1,6 +1,8 @@
 ﻿using GameServer.Rcc;
 using GameServer.Rcc.Classes;
+using SoapUI.Rcc.Classes;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
@@ -30,22 +32,50 @@ namespace GameServer
 
                     string response = wc.UploadString("http://" + ip + ":" + servicePort.ToString(), newContent);
 
+                    MessageBox.Show(response);
+
                     return response;
                 } catch (WebException e)
                 {
                     MessageBox.Show("Error whilst sending " + action + " request to service port " + servicePort.ToString() + ": " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    return "Error";
+                    
+                    try
+                    {
+                        using (var stream = e.Response.GetResponseStream())
+                        {
+                            using (var reader = new StreamReader(stream))
+                            {
+                                MessageBox.Show(reader.ReadToEnd());
+                                return reader.ReadToEnd();
+                            }
+                        }
+                    } catch (WebException e2)
+                    {
+                        return "Error";
+                    }
                 }
             }
         }
-        private static string ParseArguments(List<dynamic> args = null)
+        private static string ParseArguments(List<LuaValueNew> args = null)
         {
-            return "Not Implemented";//new LuaValue(args).value;
+            if(args != null)
+            {
+                string xmlReturn = "";
+
+                foreach (LuaValueNew value in args)
+                {
+                    xmlReturn += "<ns1:LuaValue><ns1:type>" + value.type + "</ns1:type><ns1:value>" + value.value + "</ns1:value></ns1:LuaValue>";
+                }
+
+                return xmlReturn;
+            } else
+            {
+                return "";
+            }
         }
         private static string CreateScriptExecutionModel(Script script = null)
         {
-            return "<ns1:script>\r\n\t\t\t<ns1:name>" + script.name + "</ns1:name>\r\n\t\t\t<ns1:script>" + script.script + "</ns1:script>\r\n\t\t\t<ns1:arguments>Not Implemented</ns1:arguments></ns1:script>";
+            return "<ns1:script>\r\n\t\t\t<ns1:name>" + script.name + "</ns1:name>\r\n\t\t\t<ns1:script>" + script.script + "</ns1:script>\r\n\t\t\t<ns1:arguments>" + ParseArguments(script.arguments) + "</ns1:arguments></ns1:script>";
         }
         private static string CreateJobModel(Job job = null)
         {
@@ -103,26 +133,26 @@ namespace GameServer
         {
             return SendRequestToGameServer(servicePort, "BatchJobEx", "\t\t<ns1:BatchJobEx>\r\n\t\t\t" + CreateJobModel(job) + "\r\n\t\t\t" + CreateScriptExecutionModel(script) + "\r\n\t\t</ns1:BatchJobEx>", url, ip);
         }
-        // deprecated stuff but we just use new stuff
+        // deprecated stuff // but we just use new stuff // NEVERMIND WE DONT 2008 RCC DROPPED
         public static string Execute(int servicePort = 64989, string jobID = "Test", Script script = null, string url = "roblox.com", string ip = "127.0.0.1")
         {
-            return ExecuteEx(servicePort, jobID, script, url, ip);
+            return SendRequestToGameServer(servicePort, "Execute", "\t\t<ns1:Execute>\r\n\t\t\t<ns1:jobID>" + jobID + "</ns1:jobID>\r\n\t\t\t" + CreateScriptExecutionModel(script) + "\r\n\t\t</ns1:Execute>", url, ip);
         }
         public static string OpenJob(int servicePort = 64989, Job job = null, Script script = null, string url = "roblox.com", string ip = "127.0.0.1")
         {
-            return OpenJobEx(servicePort, job, script, url, ip);
+            return SendRequestToGameServer(servicePort, "OpenJob", "\t\t<ns1:OpenJob>\r\n\t\t\t" + CreateJobModel(job) + "\r\n\t\t\t" + CreateScriptExecutionModel(script) + "\r\n\t\t</ns1:OpenJob>", url, ip);
         }
         public static string BatchJob(int servicePort = 64989, Job job = null, Script script = null, string url = "roblox.com", string ip = "127.0.0.1")
         {
-            return BatchJobEx(servicePort, job, script, url, ip);
+            return SendRequestToGameServer(servicePort, "BatchJob", "\t\t<ns1:BatchJob>\r\n\t\t\t" + CreateJobModel(job) + "\r\n\t\t\t" + CreateScriptExecutionModel(script) + "\r\n\t\t</ns1:BatchJob>", url, ip);
         }
         public static string Diag(int servicePort = 64989, int type = 0, string jobID = "Test", string url = "roblox.com", string ip = "127.0.0.1")
         {
-            return DiagEx(servicePort, type, jobID, url, ip);
+            return SendRequestToGameServer(servicePort, "Diag", "\t\t<ns1:Diag>\r\n\t\t\t<ns1:type>" + type + "</ns1:type>\r\n\t\t\t<ns1:jobID>" + jobID + "</ns1:jobID>\r\n\t\t</ns1:Diag>", url, ip);
         }
         public static string GetAllJobs(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1")
         {
-            return GetAllJobsEx(servicePort, url, ip);
+            return SendRequestToGameServer(servicePort, "GetAllJobs", "\t\t<ns1:GetAllJobs>\r\n\t\t</ns1:GetAllJobs>", url, ip);
         }
     }
 }

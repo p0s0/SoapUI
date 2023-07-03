@@ -37,6 +37,7 @@ namespace SoapUI
             this.portLbl = new System.Windows.Forms.Label();
             this.port = new System.Windows.Forms.TextBox();
             this.settingsPanel = new System.Windows.Forms.Panel();
+            this.loadScriptBtn = new System.Windows.Forms.Button();
             this.executeBtn = new System.Windows.Forms.Button();
             this.soapAction = new System.Windows.Forms.ComboBox();
             this.soapLbl = new System.Windows.Forms.Label();
@@ -75,6 +76,14 @@ namespace SoapUI
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.createdByLbl = new System.Windows.Forms.Label();
             this.repoLink = new System.Windows.Forms.LinkLabel();
+            this.scriptArgumentPanel = new System.Windows.Forms.Panel();
+            this.saveArgsToFileBtn = new System.Windows.Forms.Button();
+            this.openArgsFromFileBtn = new System.Windows.Forms.Button();
+            this.addArgumentButton = new System.Windows.Forms.Button();
+            this.argumentTemplate = new System.Windows.Forms.Panel();
+            this.removeArgument = new System.Windows.Forms.Button();
+            this.argumentValue = new System.Windows.Forms.TextBox();
+            this.argumentType = new System.Windows.Forms.ComboBox();
             this.settingsPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
             this.diagExPanel.SuspendLayout();
@@ -82,6 +91,8 @@ namespace SoapUI
             this.executePanel.SuspendLayout();
             this.renewJobPanel.SuspendLayout();
             this.openJobPanel.SuspendLayout();
+            this.scriptArgumentPanel.SuspendLayout();
+            this.argumentTemplate.SuspendLayout();
             this.SuspendLayout();
             // 
             // baseUrlLbl
@@ -138,6 +149,7 @@ namespace SoapUI
             // settingsPanel
             // 
             this.settingsPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.settingsPanel.Controls.Add(this.loadScriptBtn);
             this.settingsPanel.Controls.Add(this.executeBtn);
             this.settingsPanel.Controls.Add(this.soapAction);
             this.settingsPanel.Controls.Add(this.soapLbl);
@@ -151,6 +163,17 @@ namespace SoapUI
             this.settingsPanel.Name = "settingsPanel";
             this.settingsPanel.Size = new System.Drawing.Size(282, 312);
             this.settingsPanel.TabIndex = 6;
+            // 
+            // loadScriptBtn
+            // 
+            this.loadScriptBtn.Location = new System.Drawing.Point(13, 201);
+            this.loadScriptBtn.Name = "loadScriptBtn";
+            this.loadScriptBtn.Size = new System.Drawing.Size(255, 23);
+            this.loadScriptBtn.TabIndex = 9;
+            this.loadScriptBtn.Text = "Load Script";
+            this.loadScriptBtn.UseVisualStyleBackColor = true;
+            this.loadScriptBtn.Visible = false;
+            this.loadScriptBtn.Click += new System.EventHandler(this.loadScriptBtn_Click);
             // 
             // executeBtn
             // 
@@ -171,11 +194,15 @@ namespace SoapUI
             "GetVersion",
             "GetStatus",
             "OpenJobEx",
+            "OpenJob",
             "RenewLease",
             "ExecuteEx",
+            "Execute",
             "CloseJob",
             "DiagEx",
+            "Diag",
             "GetAllJobsEx",
+            "GetAllJobs",
             "CloseExpiredJobs",
             "CloseAllJobs"});
             this.soapAction.Location = new System.Drawing.Point(13, 145);
@@ -431,7 +458,17 @@ namespace SoapUI
             this.openJobCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.openJobCategory.FormattingEnabled = true;
             this.openJobCategory.Items.AddRange(new object[] {
-            "0"});
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
             this.openJobCategory.Location = new System.Drawing.Point(16, 106);
             this.openJobCategory.Name = "openJobCategory";
             this.openJobCategory.Size = new System.Drawing.Size(155, 21);
@@ -507,7 +544,7 @@ namespace SoapUI
             this.logBox.Location = new System.Drawing.Point(12, 331);
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
-            this.logBox.Size = new System.Drawing.Size(776, 85);
+            this.logBox.Size = new System.Drawing.Size(282, 85);
             this.logBox.TabIndex = 8;
             this.logBox.Text = "Log";
             // 
@@ -516,14 +553,14 @@ namespace SoapUI
             this.createdByLbl.AutoSize = true;
             this.createdByLbl.Location = new System.Drawing.Point(9, 428);
             this.createdByLbl.Name = "createdByLbl";
-            this.createdByLbl.Size = new System.Drawing.Size(221, 13);
+            this.createdByLbl.Size = new System.Drawing.Size(205, 13);
             this.createdByLbl.TabIndex = 9;
-            this.createdByLbl.Text = "Created by pos0#0998. March 18 2023 build.";
+            this.createdByLbl.Text = "Created by pos0#0998. April 5 2023 build.";
             // 
             // repoLink
             // 
             this.repoLink.AutoSize = true;
-            this.repoLink.Location = new System.Drawing.Point(227, 428);
+            this.repoLink.Location = new System.Drawing.Point(211, 428);
             this.repoLink.Name = "repoLink";
             this.repoLink.Size = new System.Drawing.Size(164, 13);
             this.repoLink.TabIndex = 10;
@@ -531,11 +568,99 @@ namespace SoapUI
             this.repoLink.Text = "https://github.com/p0s0/SoapUI";
             this.repoLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.repoLink_LinkClicked);
             // 
+            // scriptArgumentPanel
+            // 
+            this.scriptArgumentPanel.AutoScroll = true;
+            this.scriptArgumentPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.scriptArgumentPanel.Controls.Add(this.saveArgsToFileBtn);
+            this.scriptArgumentPanel.Controls.Add(this.openArgsFromFileBtn);
+            this.scriptArgumentPanel.Controls.Add(this.addArgumentButton);
+            this.scriptArgumentPanel.Controls.Add(this.argumentTemplate);
+            this.scriptArgumentPanel.Location = new System.Drawing.Point(301, 331);
+            this.scriptArgumentPanel.Name = "scriptArgumentPanel";
+            this.scriptArgumentPanel.Size = new System.Drawing.Size(487, 85);
+            this.scriptArgumentPanel.TabIndex = 11;
+            this.scriptArgumentPanel.Visible = false;
+            // 
+            // saveArgsToFileBtn
+            // 
+            this.saveArgsToFileBtn.Location = new System.Drawing.Point(449, 53);
+            this.saveArgsToFileBtn.Name = "saveArgsToFileBtn";
+            this.saveArgsToFileBtn.Size = new System.Drawing.Size(18, 21);
+            this.saveArgsToFileBtn.TabIndex = 3;
+            this.saveArgsToFileBtn.Text = "S";
+            this.saveArgsToFileBtn.UseVisualStyleBackColor = true;
+            this.saveArgsToFileBtn.Click += new System.EventHandler(this.saveArgsToFileBtn_Click);
+            // 
+            // openArgsFromFileBtn
+            // 
+            this.openArgsFromFileBtn.Location = new System.Drawing.Point(449, 30);
+            this.openArgsFromFileBtn.Name = "openArgsFromFileBtn";
+            this.openArgsFromFileBtn.Size = new System.Drawing.Size(18, 21);
+            this.openArgsFromFileBtn.TabIndex = 2;
+            this.openArgsFromFileBtn.Text = "F";
+            this.openArgsFromFileBtn.UseVisualStyleBackColor = true;
+            this.openArgsFromFileBtn.Click += new System.EventHandler(this.openArgsFromFileBtn_Click);
+            // 
+            // addArgumentButton
+            // 
+            this.addArgumentButton.Location = new System.Drawing.Point(449, 7);
+            this.addArgumentButton.Name = "addArgumentButton";
+            this.addArgumentButton.Size = new System.Drawing.Size(18, 21);
+            this.addArgumentButton.TabIndex = 1;
+            this.addArgumentButton.Text = "+";
+            this.addArgumentButton.UseVisualStyleBackColor = true;
+            this.addArgumentButton.Click += new System.EventHandler(this.addArgumentButton_Click);
+            // 
+            // argumentTemplate
+            // 
+            this.argumentTemplate.Controls.Add(this.removeArgument);
+            this.argumentTemplate.Controls.Add(this.argumentValue);
+            this.argumentTemplate.Controls.Add(this.argumentType);
+            this.argumentTemplate.Location = new System.Drawing.Point(4, 4);
+            this.argumentTemplate.Name = "argumentTemplate";
+            this.argumentTemplate.Size = new System.Drawing.Size(444, 29);
+            this.argumentTemplate.TabIndex = 0;
+            this.argumentTemplate.Visible = false;
+            // 
+            // removeArgument
+            // 
+            this.removeArgument.Location = new System.Drawing.Point(365, 3);
+            this.removeArgument.Name = "removeArgument";
+            this.removeArgument.Size = new System.Drawing.Size(74, 20);
+            this.removeArgument.TabIndex = 2;
+            this.removeArgument.Text = "Remove";
+            this.removeArgument.UseVisualStyleBackColor = true;
+            this.removeArgument.Click += new System.EventHandler(this.removeArgument_Click);
+            // 
+            // argumentValue
+            // 
+            this.argumentValue.Location = new System.Drawing.Point(130, 3);
+            this.argumentValue.Name = "argumentValue";
+            this.argumentValue.Size = new System.Drawing.Size(229, 20);
+            this.argumentValue.TabIndex = 1;
+            // 
+            // argumentType
+            // 
+            this.argumentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.argumentType.FormattingEnabled = true;
+            this.argumentType.Items.AddRange(new object[] {
+            "LUA_TNIL",
+            "LUA_TBOOLEAN",
+            "LUA_TNUMBER",
+            "LUA_TSTRING",
+            "LUA_TTABLE"});
+            this.argumentType.Location = new System.Drawing.Point(3, 3);
+            this.argumentType.Name = "argumentType";
+            this.argumentType.Size = new System.Drawing.Size(121, 21);
+            this.argumentType.TabIndex = 0;
+            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.scriptArgumentPanel);
             this.Controls.Add(this.repoLink);
             this.Controls.Add(this.createdByLbl);
             this.Controls.Add(this.logBox);
@@ -560,6 +685,9 @@ namespace SoapUI
             this.renewJobPanel.PerformLayout();
             this.openJobPanel.ResumeLayout(false);
             this.openJobPanel.PerformLayout();
+            this.scriptArgumentPanel.ResumeLayout(false);
+            this.argumentTemplate.ResumeLayout(false);
+            this.argumentTemplate.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -612,6 +740,15 @@ namespace SoapUI
         private System.Windows.Forms.TextBox diagExJobId;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel repoLink;
+        private System.Windows.Forms.Panel scriptArgumentPanel;
+        private System.Windows.Forms.Panel argumentTemplate;
+        private System.Windows.Forms.ComboBox argumentType;
+        private System.Windows.Forms.TextBox argumentValue;
+        private System.Windows.Forms.Button removeArgument;
+        private System.Windows.Forms.Button addArgumentButton;
+        private System.Windows.Forms.Button openArgsFromFileBtn;
+        private System.Windows.Forms.Button saveArgsToFileBtn;
+        private System.Windows.Forms.Button loadScriptBtn;
     }
 }
 
