@@ -28,6 +28,8 @@ namespace GameServer
                 {
                     string newContent = (isRBXGS ? GenerateRBXGSContentXML(content) : GenerateContentXML(url, content));
 
+                    Clipboard.SetText(newContent);
+
                     wc.Encoding = Encoding.UTF8;
 
                     wc.Headers.Add("Accept", "text/xml");
@@ -101,11 +103,11 @@ namespace GameServer
         {
             if(rbxgsMode)
             {
-                return "<environmentID>" + script.environmentID + "</environmentID><script>" + script.script + "</script><arguments><count>" + script.arguments.Count + "</count><items soapenc:arrayType=\"roblox:LuaValue1[0]\">" + ParseArguments(script.arguments, true) + "</items></arguments><name>" + script.name + "</name>";
+                return "<environmentID>" + script.environmentID + "</environmentID><script>" + script.script.Replace("<", "&lt;").Replace("&", "&amp;") + "</script><arguments><count>" + script.arguments.Count + "</count><items soapenc:arrayType=\"roblox:LuaValue1[0]\">" + ParseArguments(script.arguments, true) + "</items></arguments><name>" + script.name + "</name>";
             }
             else
             {
-                return "<ns1:script>\r\n\t\t\t<ns1:name>" + script.name + "</ns1:name>\r\n\t\t\t<ns1:script>" + script.script + "</ns1:script>\r\n\t\t\t<ns1:arguments>" + ParseArguments(script.arguments) + "</ns1:arguments></ns1:script>";
+                return "<ns1:script>\r\n\t\t\t<ns1:name>" + script.name + "</ns1:name>\r\n\t\t\t<ns1:script>" + script.script.Replace("<", "&lt;").Replace("&", "&amp;") + "</ns1:script>\r\n\t\t\t<ns1:arguments>" + ParseArguments(script.arguments) + "</ns1:arguments></ns1:script>";
             }
         }
         private static string CreateJobModel(Job job = null)
