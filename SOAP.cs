@@ -4,6 +4,7 @@ using SoapUI.Rcc.Classes;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
 
@@ -15,24 +16,27 @@ namespace GameServer
         {
             return "<?xml version=\"1.0\" encoding=\"UTF - 8\"?>\r\n<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns2=\"http://" + baseUrl + "/RCCServiceSoap\" xmlns:ns1=\"http://" + baseUrl + "/\" xmlns:ns3=\"http://" + baseUrl + "/RCCServiceSoap12\">\r\n\t<SOAP-ENV:Body>" + baseContent + "\t</SOAP-ENV:Body>\r\n</SOAP-ENV:Envelope>";
         }
-        private static string SendRequestToGameServer(int servicePort, string action, string content, string url, string ip)
+        private static string GenerateRBXGSContentXML(string baseContent)
+        {
+            return "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:roblox=\"urn:Roblox\">\r\n\t<soap:Body>\r\n\t\t" + baseContent + "\r\n\t</soap:Body>\r\n</soap:Envelope>";
+        }
+        private static string SendRequestToGameServer(int servicePort = 64989, string action = "HelloWorld", string content = "\t\t<ns1:HelloWorld>\r\n\t\t</ns1:HelloWorld>", string url = "roblox.com", string ip = "127.0.0.1", bool isRBXGS = false)
         {
             using (WebClient wc = new WebClient())
             {
                 try
                 {
-                    string newContent = GenerateContentXML(url, content);
+                    string newContent = (isRBXGS ? GenerateRBXGSContentXML(content) : GenerateContentXML(url, content));
 
                     wc.Encoding = Encoding.UTF8;
 
                     wc.Headers.Add("Accept", "text/xml");
+                    wc.Headers.Add("Expect", "text/xml");
                     wc.Headers.Add("Cache-Control", "no-cache");
                     wc.Headers.Add("Pragma", "no-cache");
                     wc.Headers.Add("SOAPAction", action);
 
-                    string response = wc.UploadString("http://" + ip + ":" + servicePort.ToString(), newContent);
-
-                    MessageBox.Show(response);
+                    string response = (isRBXGS ? wc.UploadString("http://" + ip + "/RBXGS/WebService.dll", newContent) : wc.UploadString("http://" + ip + ":" + servicePort.ToString(), newContent));
 
                     return response;
                 } catch (WebException e)
@@ -41,13 +45,19 @@ namespace GameServer
                     
                     try
                     {
-                        using (var stream = e.Response.GetResponseStream())
+                        if(e.Response != null)
                         {
-                            using (var reader = new StreamReader(stream))
+                            using (var stream = e.Response.GetResponseStream())
                             {
-                                MessageBox.Show(reader.ReadToEnd());
-                                return reader.ReadToEnd();
+                                using (var reader = new StreamReader(stream))
+                                {
+                                    MessageBox.Show(reader.ReadToEnd());
+                                    return reader.ReadToEnd();
+                                }
                             }
+                        } else
+                        {
+                            return "Error";
                         }
                     } catch (WebException e2)
                     {
@@ -56,42 +66,63 @@ namespace GameServer
                 }
             }
         }
-        private static string ParseArguments(List<LuaValueNew> args = null)
+        private static string ParseArguments(List<LuaValueNew> args = null, bool rbxgsMode = false)
         {
             if(args != null)
             {
-                string xmlReturn = "";
-
-                foreach (LuaValueNew value in args)
+                if(rbxgsMode)
                 {
-                    xmlReturn += "<ns1:LuaValue><ns1:type>" + value.type + "</ns1:type><ns1:value>" + value.value + "</ns1:value></ns1:LuaValue>";
-                }
+                    string xmlReturn = "";
 
-                return xmlReturn;
+                    foreach (LuaValueNew value in args)
+                    {
+                        xmlReturn += "<ns1:LuaValue><ns1:type>" + value.type + "</ns1:type><ns1:value>" + value.value + "</ns1:value></ns1:LuaValue>";
+                    }
+
+                    return xmlReturn;
+                } else
+                {
+                    /*string xmlReturn = "";
+
+                    foreach (LuaValueNew value in args)
+                    {
+                        xmlReturn += "<ns1:LuaValue><ns1:type>" + value.type + "</ns1:type><ns1:value>" + value.value + "</ns1:value></ns1:LuaValue>";
+                    }
+
+                    return xmlReturn;*/
+                    return ""; // TODO
+                }
             } else
             {
                 return "";
             }
         }
-        private static string CreateScriptExecutionModel(Script script = null)
+        private static string CreateScriptExecutionModel(Script script = null, bool rbxgsMode = false)
         {
-            return "<ns1:script>\r\n\t\t\t<ns1:name>" + script.name + "</ns1:name>\r\n\t\t\t<ns1:script>" + script.script + "</ns1:script>\r\n\t\t\t<ns1:arguments>" + ParseArguments(script.arguments) + "</ns1:arguments></ns1:script>";
+            if(rbxgsMode)
+            {
+                return "<environmentID>" + script.environmentID + "</environmentID><script>" + script.script + "</script><arguments><count>" + script.arguments.Count + "</count><items soapenc:arrayType=\"roblox:LuaValue1[0]\">" + ParseArguments(script.arguments, true) + "</items></arguments><name>" + script.name + "</name>";
+            }
+            else
+            {
+                return "<ns1:script>\r\n\t\t\t<ns1:name>" + script.name + "</ns1:name>\r\n\t\t\t<ns1:script>" + script.script + "</ns1:script>\r\n\t\t\t<ns1:arguments>" + ParseArguments(script.arguments) + "</ns1:arguments></ns1:script>";
+            }
         }
         private static string CreateJobModel(Job job = null)
         {
             return "<ns1:job>\r\n\t\t\t<ns1:id>" + job.id + "</ns1:id>\r\n\t\t\t<ns1:expirationInSeconds>" + job.expirationInSeconds + "</ns1:expirationInSeconds>\r\n\t\t\t<ns1:category>" + job.category + "</ns1:category>\r\n\t\t\t<ns1:cores>" + job.cores + "</ns1:cores></ns1:job>";
         }
-        public static string HelloWorld(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1")
+        public static string HelloWorld(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1", bool rbxgsMode = false)
         {
-            return SendRequestToGameServer(servicePort, "HelloWorld", "\t\t<ns1:HelloWorld>\r\n\t\t</ns1:HelloWorld>", url, ip);
+            return SendRequestToGameServer(servicePort, "HelloWorld", (rbxgsMode ? "<roblox:HelloWorld/>" : "\t\t<ns1:HelloWorld>\r\n\t\t</ns1:HelloWorld>"), url, ip, rbxgsMode);
         }
-        public static string GetVersion(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1")
+        public static string GetVersion(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1", bool rbxgsMode = false)
         {
-            return SendRequestToGameServer(servicePort, "GetVersion", "\t\t<ns1:GetVersion>\r\n\t\t</ns1:GetVersion>", url, ip);
+            return SendRequestToGameServer((rbxgsMode ? 0 : servicePort), "GetVersion", (rbxgsMode ? "<roblox:GetVersion/>" : "\t\t<ns1:GetVersion>\r\n\t\t</ns1:GetVersion>"), (rbxgsMode ? "" : url), ip, rbxgsMode);
         }
-        public static string GetStatus(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1")
+        public static string GetStatus(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1", bool rbxgsMode = false)
         {
-            return SendRequestToGameServer(servicePort, "GetStatus", "\t\t<ns1:GetStatus>\r\n\t\t</ns1:GetStatus>", url, ip);
+            return SendRequestToGameServer((rbxgsMode ? 0 : servicePort), "GetStatus", (rbxgsMode ? "<roblox:GetStatus/>" : "\t\t<ns1:GetStatus>\r\n\t\t</ns1:GetStatus>"), (rbxgsMode ? "" : url), ip, rbxgsMode);
         }
         public static string OpenJobEx(int servicePort = 64989, Job job = null, Script script = null, string url = "roblox.com", string ip = "127.0.0.1")
         {
@@ -134,9 +165,15 @@ namespace GameServer
             return SendRequestToGameServer(servicePort, "BatchJobEx", "\t\t<ns1:BatchJobEx>\r\n\t\t\t" + CreateJobModel(job) + "\r\n\t\t\t" + CreateScriptExecutionModel(script) + "\r\n\t\t</ns1:BatchJobEx>", url, ip);
         }
         // deprecated stuff // but we just use new stuff // NEVERMIND WE DONT 2008 RCC DROPPED
-        public static string Execute(int servicePort = 64989, string jobID = "Test", Script script = null, string url = "roblox.com", string ip = "127.0.0.1")
+        public static string Execute(int servicePort = 64989, string jobID = "Test", Script script = null, string url = "roblox.com", string ip = "127.0.0.1", bool rbxgsMode = false)
         {
-            return SendRequestToGameServer(servicePort, "Execute", "\t\t<ns1:Execute>\r\n\t\t\t<ns1:jobID>" + jobID + "</ns1:jobID>\r\n\t\t\t" + CreateScriptExecutionModel(script) + "\r\n\t\t</ns1:Execute>", url, ip);
+            if(rbxgsMode)
+            {
+                return SendRequestToGameServer(0, "Execute", "<roblox:Execute>" + CreateScriptExecutionModel(script, true) + "</roblox:Execute>", "", ip, true);
+            } else
+            {
+                return SendRequestToGameServer(servicePort, "Execute", "\t\t<ns1:Execute>\r\n\t\t\t<ns1:jobID>" + jobID + "</ns1:jobID>\r\n\t\t\t" + CreateScriptExecutionModel(script) + "\r\n\t\t</ns1:Execute>", url, ip);
+            }
         }
         public static string OpenJob(int servicePort = 64989, Job job = null, Script script = null, string url = "roblox.com", string ip = "127.0.0.1")
         {
@@ -153,6 +190,35 @@ namespace GameServer
         public static string GetAllJobs(int servicePort = 64989, string url = "roblox.com", string ip = "127.0.0.1")
         {
             return SendRequestToGameServer(servicePort, "GetAllJobs", "\t\t<ns1:GetAllJobs>\r\n\t\t</ns1:GetAllJobs>", url, ip);
+        }
+        // RBXGS stuff
+        public static string GetStandardOutMessages(string ip = "127.0.0.1", int maxCount = 10)
+        {
+            return SendRequestToGameServer(0, "GetStandardOutMessages", "<roblox:GetStandardOutMessages>\r\n\t<maxCount>" + maxCount + "</maxCount>\r\n</roblox:GetStandardOutMessages>", "", ip, true);
+        }
+        public static string GetAllEnvironments(string ip = "127.0.0.1")
+        {
+            return SendRequestToGameServer(0, "GetAllEnvironments", "<roblox:GetAllEnvironments/>", "", ip, true);
+        }
+        public static string OpenEnvironment(string ip = "127.0.0.1")
+        {
+            return SendRequestToGameServer(0, "OpenEnvironment", "<roblox:OpenEnvironment/>", "", ip, true);
+        }
+        public static string CloseEnvironment(string ip = "127.0.0.1", string environmentID = "RBX0")
+        {
+            return SendRequestToGameServer(0, "CloseEnvironment", "<roblox:CloseEnvironment><environmentID>" + environmentID + "</environmentID></roblox:CloseEnvironment>", "", ip, true);
+        }
+        public static string CloseAllEnvironments(string ip = "127.0.0.1")
+        {
+            return SendRequestToGameServer(0, "CloseAllEnvironments", "<roblox:CloseAllEnvironments/>", "", ip, true);
+        }
+        public static string CloseOrphanedEnvironments(string ip = "127.0.0.1")
+        {
+            return SendRequestToGameServer(0, "CloseOrphanedEnvironments", "<roblox:CloseOrphanedEnvironments/>", "", ip, true);
+        }
+        public static string Update(string ip = "127.0.0.1", string updateUrl = "roblox.com")
+        {
+            return SendRequestToGameServer(0, "Update", "<roblox:Update><url>" + updateUrl + "</url></roblox:Update>", "", ip, true);
         }
     }
 }

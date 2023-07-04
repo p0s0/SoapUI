@@ -14,6 +14,40 @@ namespace SoapUI
 {
     public partial class MainUI : Form
     {
+       public string[] rbxgsItems = new string[]
+       {
+            "GetStandardOutMessages",
+            "GetAllEnvironments",
+            "Execute",
+            "CloseAllEnvironments",
+            "CloseOrphanedEnvironments",
+            "CloseEnvironment",
+            "OpenEnvironment",
+            "Update",
+            "GetStatus",
+            "GetVersion",
+            "HelloWorld"
+        };
+
+        public string[] rccItems = new string[]
+        {
+            "HelloWorld",
+            "GetVersion",
+            "GetStatus",
+            "OpenJobEx",
+            "OpenJob",
+            "RenewLease",
+            "ExecuteEx",
+            "Execute",
+            "CloseJob",
+            "DiagEx",
+            "Diag",
+            "GetAllJobsEx",
+            "GetAllJobs",
+            "CloseExpiredJobs",
+            "CloseAllJobs"
+         };
+
         public MainUI()
         {
             InitializeComponent();
@@ -50,28 +84,60 @@ namespace SoapUI
                 XDocument doc = XDocument.Parse(xml);
                 dynamic response = null;
 
-                switch (soapAction)
+                switch (soapAction) // jesus christ this is messy
                 {
                     case "HelloWorld":
-                        response = doc.Descendants().Where(x => x.Name.LocalName == "HelloWorldResult").FirstOrDefault();
+                        if(rbxgsMode.Checked)
+                        {
+                            response = doc.Descendants().Where(x => x.Name.LocalName == "HelloWorld").FirstOrDefault();
 
-                        MessageBox.Show(response.FirstNode.ToString(), "HelloWorld Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(response.FirstNode.Value.ToString(), "HelloWorld Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        } else
+                        {
+                            response = doc.Descendants().Where(x => x.Name.LocalName == "HelloWorldResult").FirstOrDefault();
+
+                            MessageBox.Show(response.FirstNode.ToString(), "HelloWorld Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
 
                         break;
                     case "GetVersion":
-                        response = doc.Descendants().Where(x => x.Name.LocalName == "GetVersionResult").FirstOrDefault();
+                        if(rbxgsMode.Checked)
+                        {
+                            response = doc.Descendants().Where(x => x.Name.LocalName == "GetVersion").FirstOrDefault().Element("return").Value;
 
-                        MessageBox.Show(response.FirstNode.ToString(), "GetVersion Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            AddToLog("Version: " + response);
+
+                            MessageBox.Show(response, "GetVersion Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        } else
+                        {
+                            response = doc.Descendants().Where(x => x.Name.LocalName == "GetVersionResult").FirstOrDefault();
+
+                            MessageBox.Show(response.FirstNode.ToString(), "GetVersion Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
 
                         break;
                     case "GetStatus":
-                        response = doc.Descendants().Where(x => x.Name.LocalName == "GetStatusResult").Select(x => new XmlResponses.Status()
+                        if(rbxgsMode.Checked)
                         {
-                            version = (string)x.Element(x.Name.Namespace + "version"),
-                            environmentCount = (int)x.Element(x.Name.Namespace + "environmentCount")
-                        }).FirstOrDefault();
+                            response = doc.Descendants().Where(x => x.Name.LocalName == "GetStatus").FirstOrDefault().Element("return");
 
-                        MessageBox.Show("Version: " + response.version + "\r\nEnvironment count: " + response.environmentCount, "GetStatus Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            dynamic webServiceVersion = response.Element("version").Value;
+                            dynamic environmentCount = response.Element("environmentCount").Value;
+
+                            AddToLog("Version: " + webServiceVersion);
+                            AddToLog("Environment count: " + environmentCount);
+
+                            MessageBox.Show("Version: " + webServiceVersion + "\r\nEnvironment count: " + environmentCount, "GetStatus Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        } else
+                        {
+                            response = doc.Descendants().Where(x => x.Name.LocalName == "GetStatusResult").Select(x => new XmlResponses.Status()
+                            {
+                                version = (string)x.Element(x.Name.Namespace + "version"),
+                                environmentCount = (int)x.Element(x.Name.Namespace + "environmentCount")
+                            }).FirstOrDefault();
+
+                            MessageBox.Show("Version: " + response.version + "\r\nEnvironment count: " + response.environmentCount, "GetStatus Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
 
                         break;
                     case "OpenJobEx": // This doesn't have an actual response, let's just return a generic "Success!"
@@ -92,8 +158,50 @@ namespace SoapUI
                         MessageBox.Show("Success!", "ExecuteEx Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
-                    case "Execute": // This doesn't have an actual response, let's just return a generic "Success!"
-                        MessageBox.Show("Success!", "Execute Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    case "Execute":
+                        if(rbxgsMode.Checked)
+                        {
+                            response = doc.Descendants().Where(x => x.Name.LocalName == "Execute").FirstOrDefault().Element("return");
+
+                            dynamic returnCount = response.Element("count").Value;
+                            dynamic returnValues = response.Element("items").Elements();
+
+                            AddToLog("Return value count: " + returnCount);
+
+                            foreach (XElement item in returnValues)
+                            {
+                                if (item.Name.ToString() != "count")
+                                {
+                                    string prefix = "[UNKNOWN TYPE] ";
+
+                                    switch (item.Element("type").Value)
+                                    {
+                                        case "LUA_TNIL":
+                                            prefix = "[NIL] ";
+                                            break;
+                                        case "LUA_TBOOLEAN":
+                                            prefix = "[BOOLEAN] ";
+                                            break;
+                                        case "LUA_TNUMBER":
+                                            prefix = "[NUMBER] ";
+                                            break;
+                                        case "LUA_TSTRING":
+                                            prefix = "[STRING] ";
+                                            break;
+                                        case "LUA_TTABLE":
+                                            prefix = "[TABLE] ";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    AddToLog(prefix + item.Element("value").Value.ToString());
+                                }
+                            }
+                        } else
+                        {
+                            MessageBox.Show("Success!", "Execute Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
 
                         break;
                     case "CloseJob": // This doesn't have an actual response, let's just return a generic "Success!"
@@ -136,6 +244,76 @@ namespace SoapUI
                         MessageBox.Show("Jobs closed: " + response.FirstNode.ToString(), "CloseAllJobs Response", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         break;
+                    case "OpenEnvironment":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "OpenEnvironment").FirstOrDefault().Element("return");
+
+                        AddToLog("Opened Environment " + response.Value);
+
+                        MessageBox.Show("Success", "Open Environment", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        break;
+                    case "CloseEnvironment":
+                        AddToLog("Closed environment");
+
+                        break;
+                    case "CloseOrphanedEnvironments":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "CloseOrphanedEnvironments").FirstOrDefault().Element("return");
+
+                        AddToLog("Closed " + response.Value + " orphaned environments");
+
+                        break;
+                    case "CloseAllEnvironments":
+                        AddToLog("Closed all environments");
+
+                        break;
+                    case "GetAllEnvironments":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "GetAllEnvironments").FirstOrDefault().Element("return");
+
+                        AddToLog("Environment count: " + response.Element("count").Value);
+
+                        foreach(XElement item in response.Element("items").Elements())
+                        {
+                            AddToLog(item.Value);
+                        }
+
+                        break;
+                    case "GetStandardOutMessages":
+                        response = doc.Descendants().Where(x => x.Name.LocalName == "GetStandardOutMessages").FirstOrDefault().Element("return");
+
+                        dynamic messageCount = response.Element("count").Value;
+                        dynamic messages = response.Element("items").Elements();
+
+                        AddToLog("Message count: " + messageCount);
+
+                        foreach(XElement item in messages)
+                        {
+                            if(item.Name.ToString() != "count")
+                            {
+                                string prefix = "[UNKNOWN] ";
+
+                                switch (item.Element("type").Value)
+                                {
+                                    case "MESSAGE_OUTPUT":
+                                        prefix = "[OUTPUT] ";
+                                        break;
+                                    case "MESSAGE_INFO":
+                                        prefix = "[INFO] ";
+                                        break;
+                                    case "MESSAGE_WARNING":
+                                        prefix = "[WARNING] ";
+                                        break;
+                                    case "MESSAGE_ERROR":
+                                        prefix = "[ERROR] ";
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                AddToLog(new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(int.Parse(item.Element("time").Value)).ToLocalTime().ToString() + " - " + prefix + item.Element("text").Value);
+                            }
+                        }
+
+                        break;
                     default:
                         MessageBox.Show("Attempt to call ParseXML(string xml, string soapAction) with invalid arguments", "ParseXML(string xml, string soapAction) error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
@@ -156,16 +334,16 @@ namespace SoapUI
             {
                 Enabled = false;
 
-                switch (itemText)
+                switch (itemText) // also messy as hell bruh
                 {
                     case "HelloWorld":
-                        ParseXML(HelloWorld(int.Parse(port.Text), baseUrl.Text, ip.Text), "HelloWorld");
+                        ParseXML(HelloWorld(int.Parse(port.Text), baseUrl.Text, ip.Text, rbxgsMode.Checked), "HelloWorld");
                         break;
                     case "GetVersion":
-                        ParseXML(GetVersion(int.Parse(port.Text), baseUrl.Text, ip.Text), "GetVersion");
+                        ParseXML(GetVersion(int.Parse(port.Text), baseUrl.Text, ip.Text, rbxgsMode.Checked), "GetVersion");
                         break;
                     case "GetStatus":
-                        ParseXML(GetStatus(int.Parse(port.Text), baseUrl.Text, ip.Text), "GetStatus");
+                        ParseXML(GetStatus(int.Parse(port.Text), baseUrl.Text, ip.Text, rbxgsMode.Checked), "GetStatus");
                         break;
                     case "OpenJobEx":
                         ParseXML(OpenJobEx(int.Parse(port.Text), new GameServer.Rcc.Job(openJobId.Text, Double.Parse(openJobExpiration.Text), openJobCategory.SelectedIndex, Double.Parse(openJobCores.Text)), new GameServer.Rcc.Classes.Script("GameServer", openJobScript.Text, GetLuaValues()), baseUrl.Text, ip.Text), "OpenJobEx");
@@ -180,7 +358,7 @@ namespace SoapUI
                         ParseXML(ExecuteEx(int.Parse(port.Text), executeJobId.Text, new GameServer.Rcc.Classes.Script("ExecuteEx", executeScript.Text, GetLuaValues()), baseUrl.Text, ip.Text), "ExecuteEx");
                         break;
                     case "Execute":
-                        ParseXML(Execute(int.Parse(port.Text), executeJobId.Text, new GameServer.Rcc.Classes.Script("ExecuteEx", executeScript.Text, GetLuaValues()), baseUrl.Text, ip.Text), "Execute");
+                        ParseXML(Execute(int.Parse(port.Text), executeJobId.Text, new GameServer.Rcc.Classes.Script("Execute", executeScript.Text, GetLuaValues(), executeJobId.Text), baseUrl.Text, ip.Text, rbxgsMode.Checked), "Execute");
                         break;
                     case "CloseJob":
                         ParseXML(CloseJob(int.Parse(port.Text), closeJobId.Text, baseUrl.Text, ip.Text), "CloseJob");
@@ -203,6 +381,28 @@ namespace SoapUI
                     case "CloseAllJobs":
                         ParseXML(CloseAllJobs(int.Parse(port.Text), baseUrl.Text, ip.Text), "CloseAllJobs");
                         break;
+                    // RBXGS
+                    case "GetStandardOutMessages":
+                        ParseXML(GetStandardOutMessages(ip.Text, 30), "GetStandardOutMessages");
+                        break;
+                    case "GetAllEnvironments":
+                        ParseXML(GetAllEnvironments(ip.Text), "GetAllEnvironments");
+                        break;
+                    case "OpenEnvironment":
+                        ParseXML(OpenEnvironment(ip.Text), "OpenEnvironment");
+                        break;
+                    case "CloseEnvironment":
+                        ParseXML(CloseEnvironment(ip.Text, closeJobId.Text), "CloseEnvironment");
+                        break;
+                    case "CloseAllEnvironments":
+                        ParseXML(CloseAllEnvironments(ip.Text), "CloseAllEnvironments");
+                        break;
+                    case "CloseOrphanedEnvironments":
+                        ParseXML(CloseOrphanedEnvironments(ip.Text), "CloseOrphanedEnvironments");
+                        break;
+                    case "Update":
+                        ParseXML(GameServer.SOAP.Update(ip.Text), "Update");
+                        break;
                     default:
                         AddToLog("Invalid SOAPAction " + itemText);
                         MessageBox.Show("Sorry, the SOAPAction " + itemText + " is currently not implemented.", "Not implemented", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -218,7 +418,7 @@ namespace SoapUI
             }
         }
 
-        private void soapAction_SelectedValueChanged(object sender, EventArgs e)
+        private void hideAllPanels()
         {
             noExtraInfoLbl.Visible = false;
             openJobPanel.Visible = false;
@@ -229,6 +429,11 @@ namespace SoapUI
             scriptArgumentPanel.Visible = false;
             loadScriptBtn.Visible = false;
             logBox.Size = new System.Drawing.Size(776, 85);
+        }
+
+        private void soapAction_SelectedValueChanged(object sender, EventArgs e)
+        {
+            hideAllPanels();
 
             switch (soapAction.GetItemText(soapAction.SelectedItem))
             {
@@ -260,6 +465,9 @@ namespace SoapUI
                     logBox.Size = new System.Drawing.Size(282, 85);
                     break;
                 case "CloseJob":
+                    closeJobPanel.Visible = true;
+                    break;
+                case "CloseEnvironment":
                     closeJobPanel.Visible = true;
                     break;
                 case "DiagEx":
@@ -416,6 +624,32 @@ namespace SoapUI
 
                 scriptDialog.Dispose();
             }
+        }
+
+        private void rbxgsMode_CheckedChanged(object sender, EventArgs e)
+        {
+            hideAllPanels();
+            soapAction.Items.Clear();
+
+            if (rbxgsMode.Checked)
+            {
+                foreach (string action in rbxgsItems)
+                {
+                    soapAction.Items.Add(action);
+                }
+            } else
+            {
+                foreach (string action in rccItems)
+                {
+                    soapAction.Items.Add(action);
+                }
+            }
+
+            baseUrl.Visible = !rbxgsMode.Checked;
+            baseUrlLbl.Visible = !rbxgsMode.Checked;
+
+            port.Visible = !rbxgsMode.Checked;
+            portLbl.Visible = !rbxgsMode.Checked;
         }
     }
 }

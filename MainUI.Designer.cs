@@ -84,6 +84,7 @@ namespace SoapUI
             this.removeArgument = new System.Windows.Forms.Button();
             this.argumentValue = new System.Windows.Forms.TextBox();
             this.argumentType = new System.Windows.Forms.ComboBox();
+            this.rbxgsMode = new System.Windows.Forms.CheckBox();
             this.settingsPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
             this.diagExPanel.SuspendLayout();
@@ -149,6 +150,7 @@ namespace SoapUI
             // settingsPanel
             // 
             this.settingsPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.settingsPanel.Controls.Add(this.rbxgsMode);
             this.settingsPanel.Controls.Add(this.loadScriptBtn);
             this.settingsPanel.Controls.Add(this.executeBtn);
             this.settingsPanel.Controls.Add(this.soapAction);
@@ -553,14 +555,14 @@ namespace SoapUI
             this.createdByLbl.AutoSize = true;
             this.createdByLbl.Location = new System.Drawing.Point(9, 428);
             this.createdByLbl.Name = "createdByLbl";
-            this.createdByLbl.Size = new System.Drawing.Size(205, 13);
+            this.createdByLbl.Size = new System.Drawing.Size(172, 13);
             this.createdByLbl.TabIndex = 9;
-            this.createdByLbl.Text = "Created by pos0#0998. April 5 2023 build.";
+            this.createdByLbl.Text = "Created by pos0. July 3 2023 build.";
             // 
             // repoLink
             // 
             this.repoLink.AutoSize = true;
-            this.repoLink.Location = new System.Drawing.Point(211, 428);
+            this.repoLink.Location = new System.Drawing.Point(178, 428);
             this.repoLink.Name = "repoLink";
             this.repoLink.Size = new System.Drawing.Size(164, 13);
             this.repoLink.TabIndex = 10;
@@ -654,6 +656,17 @@ namespace SoapUI
             this.argumentType.Name = "argumentType";
             this.argumentType.Size = new System.Drawing.Size(121, 21);
             this.argumentType.TabIndex = 0;
+            // 
+            // rbxgsMode
+            // 
+            this.rbxgsMode.AutoSize = true;
+            this.rbxgsMode.Location = new System.Drawing.Point(13, 281);
+            this.rbxgsMode.Name = "rbxgsMode";
+            this.rbxgsMode.Size = new System.Drawing.Size(93, 17);
+            this.rbxgsMode.TabIndex = 10;
+            this.rbxgsMode.Text = "RBXGS Mode";
+            this.rbxgsMode.UseVisualStyleBackColor = true;
+            this.rbxgsMode.CheckedChanged += new System.EventHandler(this.rbxgsMode_CheckedChanged);
             // 
             // MainUI
             // 
@@ -749,6 +762,7 @@ namespace SoapUI
         private System.Windows.Forms.Button openArgsFromFileBtn;
         private System.Windows.Forms.Button saveArgsToFileBtn;
         private System.Windows.Forms.Button loadScriptBtn;
+        private System.Windows.Forms.CheckBox rbxgsMode;
     }
 }
 
