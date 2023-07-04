@@ -28,8 +28,6 @@ namespace GameServer
                 {
                     string newContent = (isRBXGS ? GenerateRBXGSContentXML(content) : GenerateContentXML(url, content));
 
-                    Clipboard.SetText(newContent);
-
                     wc.Encoding = Encoding.UTF8;
 
                     wc.Headers.Add("Accept", "text/xml");
